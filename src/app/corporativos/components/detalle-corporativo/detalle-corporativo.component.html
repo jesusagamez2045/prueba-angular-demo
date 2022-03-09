@@ -1,0 +1,425 @@
+<div class="row justify-content-center">
+  <div class="col-12 col-md-8">
+    <div class="card">
+      <div class="card-content">
+        <div class="card-body">
+          <ngb-tabset>
+            <ngb-tab>
+              <ng-template ngbTabTitle>
+                <em class="fa fa-file-o"></em> Datos generales</ng-template
+              >
+              <ng-template ngbTabContent *ngIf="corporativo">
+                <div class="row">
+                  <div class="col-12">
+                    <div class="media d-flex align-items-start">
+                      <img
+                        *ngIf="
+                          corporativo.S_LogoURL?.length > 0;
+                          else customAvatar
+                        "
+                        [src]="corporativo?.S_LogoURL"
+                        alt="user view avatar"
+                        height="64"
+                        width="64"
+                        class="users-avatar-shadow rounded"
+                      />
+                      <ng-template #customAvatar>
+                        <div
+                          class="avatar mr-1 ml-0"
+                          [ngClass]="{
+                            'bg-primary': corporativo.S_Activo == 1,
+                            'bg-danger': corporativo.S_Activo !== 1
+                          }"
+                        >
+                          <div class="avatar-content">
+                            {{ corporativo.S_NombreCorto | shortName }}
+                          </div>
+                        </div>
+                      </ng-template>
+                      <div class="media-body ml-3">
+                        <h4>
+                          <span class="users-view-name mr-1">{{
+                            corporativo.S_NombreCorto
+                          }}</span>
+                        </h4>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12">
+                    <form [formGroup]="corporativoForm" (ngSubmit)="onSubmit()">
+                      <div class="row">
+                        <div class="col-12 col-sm-3">
+                          <label>NOMBRE CORTO</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            formControlName="S_NombreCorto"
+                          />
+                        </div>
+                        <div class="col-12 col-sm-6">
+                          <label>NOMBRE COMPLETO</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            formControlName="S_NombreCompleto"
+                          />
+                        </div>
+                        <div class="col-12 col-sm-3">
+                          <label>STATUS *</label>
+                          <div class="form-group">
+                            <select
+                              class="form-control"
+                              formControlName="S_Activo"
+                            >
+                              <option value="0">Inactivo</option>
+                              <option value="1">Activo</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-12 col-sm-3">
+                          <label>FECHA DE INCORPORACIÓN</label>
+                          <div class="form-group">
+                            <div class="input-group">
+                              <input
+                                class="form-control"
+                                formControlName="D_FechaIncorporacion"
+                                ngbDatepicker
+                                #d2="ngbDatepicker"
+                              />
+                              <div class="input-group-append">
+                                <div
+                                  class="input-group-text"
+                                  (click)="d2.toggle()"
+                                >
+                                  <em
+                                    class="fa fa-calendar"
+                                    style="cursor: pointer"
+                                  ></em>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-12 col-sm-3">
+                          <label>URL DEL SISTEMA *</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            formControlName="S_SystemUrl"
+                          />
+                        </div>
+                      </div>
+                      <div class="row pt-3">
+                        <div
+                          class="col-12 d-flex justify-content-end align-items-center"
+                          *ngIf="formState === 'readonly'"
+                        >
+                          <a
+                            type="button"
+                            class="btn btn-sm btn-secondary px-3 py-1 mr-2"
+                            [routerLink]="['/corporativos']"
+                          >
+                            Regresar
+                          </a>
+                          <button
+                            type="button"
+                            class="btn btn-sm btn-primary px-3 py-1"
+                            (click)="onClickEditForm('edit')"
+                          >
+                            Editar
+                          </button>
+                        </div>
+                        <div
+                          class="col-12 d-flex justify-content-end align-items-center"
+                          *ngIf="formState === 'edit'"
+                        >
+                          <button
+                            type="button"
+                            class="btn btn-sm btn-secondary px-3 py-1 mr-2"
+                            (click)="onClickEditForm('readonly')"
+                          >
+                            Cancelar
+                          </button>
+                          <button
+                            type="submit"
+                            class="btn btn-sm btn-primary px-3 py-1"
+                          >
+                            Guardar Cambios
+                          </button>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </ng-template>
+            </ngb-tab>
+            <ngb-tab>
+              <ng-template ngbTabTitle
+                ><div (click)="resetContactData()">
+                  <em class="ft-users"></em> Contactos
+                </div>
+              </ng-template>
+              <ng-template ngbTabContent *ngIf="corporativo">
+                <div class="row">
+                  <div class="col-12">
+                    <div class="media d-flex align-items-start">
+                      <img
+                        *ngIf="
+                          corporativo.S_LogoURL?.length > 0;
+                          else customAvatar
+                        "
+                        [src]="corporativo?.S_LogoURL"
+                        alt="user view avatar"
+                        height="64"
+                        width="64"
+                        class="users-avatar-shadow rounded"
+                      />
+                      <ng-template #customAvatar>
+                        <div
+                          class="avatar mr-1 ml-0"
+                          [ngClass]="{
+                            'bg-primary': corporativo.S_Activo == 1,
+                            'bg-danger': corporativo.S_Activo !== 1
+                          }"
+                        >
+                          <div class="avatar-content">
+                            {{ corporativo.S_NombreCorto | shortName }}
+                          </div>
+                        </div>
+                      </ng-template>
+                      <div class="media-body ml-3">
+                        <h4>
+                          <span class="users-view-name mr-1">{{
+                            corporativo.S_NombreCorto
+                          }}</span>
+                        </h4>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row pb-3">
+                  <div class="col-12">
+                    <ngx-datatable
+                      [rows]="corporativo.tw_contactos_corporativo"
+                      [rowHeight]="40"
+                      class="bootstrap core-bootstrap"
+                      [columnMode]="ColumnMode.force"
+                      [headerHeight]="40"
+                      [scrollbarH]="true"
+                    >
+                      <ngx-datatable-column name="NOMBRE">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                          {{ row.S_Nombre }}
+                        </ng-template>
+                      </ngx-datatable-column>
+                      <ngx-datatable-column name="PUESTO">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                          {{ row.S_Puesto }}
+                        </ng-template>
+                      </ngx-datatable-column>
+                      <ngx-datatable-column name="TELEFONO">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                          {{ row.N_TelefonoFijo }}
+                        </ng-template>
+                      </ngx-datatable-column>
+                      <ngx-datatable-column name="CELULAR">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                          {{ row.N_TelefonoMovil }}
+                        </ng-template>
+                      </ngx-datatable-column>
+                      <ngx-datatable-column name="EMAIL">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                          {{ row.S_Email }}
+                        </ng-template>
+                      </ngx-datatable-column>
+                      <ngx-datatable-column name="OBSERVACIONES">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                          {{ row.S_Comentarios }}
+                        </ng-template>
+                      </ngx-datatable-column>
+                      <ngx-datatable-column name="ACCIONES" [width]="70">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                          <div class="d-flex justify-content-center">
+                            <em
+                              class="ft-edit cursor-pointer"
+                              title="Editar"
+                              (click)="onClickEditContact(row)"
+                            ></em>
+                            <em
+                              class="fa fa-trash ml-1 cursor-pointer"
+                              title="Eliminar"
+                              (click)="deleteContacto(row.id)"
+                            ></em>
+                          </div>
+                        </ng-template>
+                      </ngx-datatable-column>
+                    </ngx-datatable>
+                  </div>
+                </div>
+                <div class="row pt-3 pb-3">
+                  <div class="col-12">
+                    <form
+                      [formGroup]="contactoForm"
+                      (ngSubmit)="onSubmitContactForm()"
+                    >
+                      <div class="row pb-3">
+                        <div class="col-12 col-sm-3">
+                          <label>NOMBRE</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            formControlName="S_Nombre"
+                            [ngClass]="
+                              contactoForm.controls['S_Nombre'].invalid &&
+                              contactoForm.controls['S_Nombre'].touched
+                                ? 'is-invalid'
+                                : ''
+                            "
+                          />
+                          <div
+                            class="invalid-tooltip"
+                            *ngIf="
+                              contactoForm.controls['S_Nombre'].invalid &&
+                              contactoForm.controls['S_Nombre'].touched
+                            "
+                          >
+                            Este campo es requerido
+                          </div>
+                        </div>
+                        <div class="col-12 col-sm-3">
+                          <label>PUESTO</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            formControlName="S_Puesto"
+                            [ngClass]="
+                              contactoForm.controls['S_Puesto'].invalid &&
+                              contactoForm.controls['S_Puesto'].touched
+                                ? 'is-invalid'
+                                : ''
+                            "
+                          />
+                          <div
+                            class="invalid-tooltip"
+                            *ngIf="
+                              contactoForm.controls['S_Puesto'].invalid &&
+                              contactoForm.controls['S_Puesto'].touched
+                            "
+                          >
+                            Este campo es requerido
+                          </div>
+                        </div>
+                        <div class="col-12 col-sm-6">
+                          <label>COMENTARIOS</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            formControlName="S_Comentarios"
+                          />
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-12 col-sm-3">
+                          <label>TELÉFONO FIJO</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            formControlName="N_TelefonoFijo"
+                            [ngClass]="
+                              contactoForm.controls['N_TelefonoFijo'].invalid &&
+                              contactoForm.controls['N_TelefonoFijo'].touched
+                                ? 'is-invalid'
+                                : ''
+                            "
+                          />
+                          <div
+                            class="invalid-tooltip"
+                            *ngIf="
+                              contactoForm.controls['N_TelefonoFijo'].invalid &&
+                              contactoForm.controls['N_TelefonoFijo'].touched
+                            "
+                          >
+                            Este campo es requerido
+                          </div>
+                        </div>
+                        <div class="col-12 col-sm-3">
+                          <label>TELEFÓNO MOVIL</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            formControlName="N_TelefonoMovil"
+                            [ngClass]="
+                              contactoForm.controls['N_TelefonoMovil']
+                                .invalid &&
+                              contactoForm.controls['N_TelefonoMovil'].touched
+                                ? 'is-invalid'
+                                : ''
+                            "
+                          />
+                          <div
+                            class="invalid-tooltip"
+                            *ngIf="
+                              contactoForm.controls['N_TelefonoMovil']
+                                .invalid &&
+                              contactoForm.controls['N_TelefonoMovil'].touched
+                            "
+                          >
+                            Este campo es requerido
+                          </div>
+                        </div>
+                        <div class="col-12 col-sm-3">
+                          <label>EMAIL</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            formControlName="S_Email"
+                            [ngClass]="
+                              contactoForm.controls['S_Email'].invalid &&
+                              contactoForm.controls['S_Email'].touched
+                                ? 'is-invalid'
+                                : ''
+                            "
+                          />
+                          <div
+                            class="invalid-tooltip"
+                            *ngIf="
+                              contactoForm.controls['S_Email'].invalid &&
+                              contactoForm.controls['S_Email'].touched
+                            "
+                          >
+                            {{
+                              contactoForm.controls["S_Email"].errors?.required
+                                ? "Este campo es requerido"
+                                : contactoForm.controls["S_Email"].errors?.email
+                                ? "Debe ser un email valido"
+                                : ""
+                            }}
+                          </div>
+                        </div>
+                        <div
+                          class="col-12 col-sm-3 d-flex justify-content-start align-items-end"
+                        >
+                          <button
+                            type="submit"
+                            class="btn btn-sm btn-secondary px-3 py-1"
+                            [disabled]="!contactoForm.valid"
+                          >
+                            {{ selectedContact ? 'ACTUALIZAR CONTACTO' : 'AGREGAR CONTACTO' }}
+                          </button>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </ng-template>
+            </ngb-tab>
+          </ngb-tabset>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

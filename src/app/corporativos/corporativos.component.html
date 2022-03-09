@@ -1,0 +1,183 @@
+<div class="row">
+  <div class="col-12">
+    <div class="px-2">
+      <div class="row border rounded py-2 mb-2 mx-n2">
+        <div class="col-12 col-sm-6 col-lg-3">
+          <label for="users-list-verified">STATUS</label>
+          <div class="form-group">
+            <select id="users-list-verified" class="form-control" disabled>
+              <option value="">Todos</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-3">
+          <label for="users-list-role">CREADO POR</label>
+          <div class="form-group">
+            <select id="users-list-role" class="form-control" disabled>
+              <option value="">Todos</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-3">
+          <label for="users-list-status">ASIGNADO A</label>
+          <div class="form-group">
+            <select id="users-list-status" class="form-control" disabled>
+              <option value="">Todos</option>
+            </select>
+          </div>
+        </div>
+        <div
+          class="col-12 col-sm-6 col-lg-3 d-flex align-items-baseline justify-content-end"
+        >
+          <button
+            type="button"
+            class="btn btn-success btn-icon round mr-1 mb-1"
+          >
+            <i class="fa fa-plus"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12">
+    <div class="card">
+      <div class="card-content">
+        <div class="card-body">
+          <div class="form-group">
+            <label
+              >MOSTRAR
+              <select
+                name="users-list-select"
+                class="form-control form-control-sm d-inline-block width-100 p-right-25 pl-4 mx-1"
+                (change)="changeLimit($event.target.value)"
+              >
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+              </select>
+              ENTRADAS</label
+            ><label for="ngx-filter-ref" class="float-right"
+              >BUSCAR:
+              <input
+                id="ngx-filter-ref"
+                type="text"
+                class="form-control form-control-sm d-inline-block width-200 ml-1"
+                disabled
+            /></label>
+          </div>
+          <ngx-datatable
+            [rows]="corporativos"
+            [rowHeight]="50"
+            class="bootstrap core-bootstrap"
+            [limit]="limit"
+            [columnMode]="ColumnMode.force"
+            [headerHeight]="50"
+            [footerHeight]="50"
+            [scrollbarH]="true"
+          >
+            <ngx-datatable-column name="Corporativo" [width]="150">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                <div class="d-flex align-items-center">
+                  <div *ngIf="row.S_LogoURL?.length > 0; else customAvatar">
+                    <img
+                      class="rounded-circle mr-1"
+                      [src]="row.S_LogoURL"
+                      height="32"
+                      width="32"
+                      alt=""
+                    />
+                  </div>
+                  <ng-template #customAvatar>
+                    <div
+                      class="avatar mr-1 ml-0"
+                      [ngClass]="{
+                        'bg-primary': row.S_Activo == '1',
+                        'bg-success': row.S_Activo == '2',
+                        'bg-danger': row.S_Activo == '3',
+                        'bg-warning': row.S_Activo == '4',
+                        'bg-info': row.S_Activo == '5'
+                      }"
+                    >
+                      <div class="avatar-content">
+                        {{ row.S_NombreCorto | shortName }}
+                      </div>
+                    </div>
+                  </ng-template>
+                  <div class="cell-line-height">
+                    <a [routerLink]="['/corporativos/detalle', row.id]">
+                      <p class="text-primary font-medium-1 line-height-1 mb-0">
+                        {{ row.S_NombreCorto }}
+                      </p>
+                    </a>
+                    <span class="text-muted font-small-2">
+                      {{ row.S_NombreCompleto }}</span
+                    >
+                  </div>
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="URL">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                <a [href]="url + row.S_SystemUrl" target="_blank">{{
+                  url + row.S_SystemUrl
+                }}</a>
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="INCORPORACIÓN">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                <span>{{ row.D_FechaIncorporacion | date: "dd-MMM-y" }}</span>
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="CREADO EL">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                <div class="d-flex align-items-center">
+                  <div class="cell-line-height">
+                    <p class="line-height-1 mb-0">
+                      {{ row.created_at | date: "dd-MMM-y" }}
+                    </p>
+                    <span class="text-muted font-small-2">
+                      {{ row.user_created.S_Nombre }}</span
+                    >
+                  </div>
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="ASIGNADO A">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                <span>{{ row.asignado.S_Nombre }}</span>
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="ESTADO">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                <div
+                  class="badge"
+                  [ngClass]="{
+                    'bg-success': row.S_Activo == 1,
+                    'bg-primary': row.S_Activo !== 1
+                  }"
+                >
+                  {{ row.S_Activo | state }}
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="ACCIONES" [width]="70">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                <a [routerLink]="['/corporativos/detalle', row.id]">
+                  <em
+                    class="ft-eye text-primary cursor-pointer mr-2"
+                    title="Ver detalle"
+                  ></em>
+                </a>
+                <em
+                  class="ft-check-circle text-muted cursor-pointer"
+                  title="Desactivar"
+                ></em>
+              </ng-template>
+            </ngx-datatable-column>
+          </ngx-datatable>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
